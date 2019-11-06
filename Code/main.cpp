@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string.h>
+#include "Sudoku.hpp"
 //#include <chrono>
 
 //using namespace std::chrono;
@@ -34,6 +35,9 @@ int main(int argc, char** argv){
                     input >> matrix[i][j];
                 }
             }
+
+            Sudoku s(square, line, column, matrix);
+            s.PrintGraph();
         }
         else{
             cout << "Couldn't open file " << fileName << 
