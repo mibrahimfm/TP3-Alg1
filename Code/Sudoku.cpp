@@ -25,20 +25,24 @@ void Sudoku::BuildGraph(int square, int line, int column, Position** table){
     for(int i = 0; i < square; i++){
         for(int j = 0; j < square; j++){            
             int k = (i < j) ? i+1 : j+1;
+            int aux = k;
             for(; k < square; k++){
                 if(k > i){
-                    addEdge(table[i][j].position, table[k][j].position);
+                    if(!existsEdge(table[i][j].position, table[k][j].position))
+                        addEdge(table[i][j].position, table[k][j].position);
                 }
                 if(k > j)
-                    addEdge(table[i][j].position, table[i][k].position);
+                    if(!existsEdge(table[i][j].position, table[i][k].position))
+                        addEdge(table[i][j].position, table[i][k].position);
                 int maxLC = (line > column) ? line : column;
-                for(int l = k; l < k + maxLC; l++){
-                    if(k > i && k > j)
-                        if((int)i/line == (int)k/line && i != k){
-                            if((int)j/column == (int)l/column && j != l){
+                //if(aux == k)
+                for(int l = 0; l < square; l++){
+                    if((int)i/line == (int)k/line && i != k){
+                        if((int)j/column == (int)l/column && j != l){
+                            if(!existsEdge(table[i][j].position, table[k][l].position))
                                 addEdge(table[i][j].position, table[k][l].position);
-                            }
                         }
+                    }
                 }
             }
         }
@@ -48,6 +52,15 @@ void Sudoku::BuildGraph(int square, int line, int column, Position** table){
 void Sudoku::addEdge(int v1, int v2){
     this->adjList[v1].push_back(v2);
     this->adjList[v2].push_back(v1);
+}
+
+bool Sudoku::existsEdge(int v1, int v2){
+    for(auto p : this->adjList[v1]){
+        if(p == v2)
+            return true;
+    }
+
+    return false;
 }
 
 void Sudoku::PrintGraph() { 

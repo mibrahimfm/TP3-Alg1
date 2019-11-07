@@ -15,6 +15,7 @@ class Sudoku{
 private:
     int V;
     void addEdge(int, int);
+    bool existsEdge(int, int);
     vector<vector<int>> adjList;
 public:
     Sudoku(int, int, int, int**);
