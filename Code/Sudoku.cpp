@@ -31,6 +31,14 @@ void Sudoku::BuildGraph(int square, int line, int column, Position** table){
                 }
                 if(k > j)
                     addEdge(table[i][j].position, table[i][k].position);
+                for(int l = k; l < square; l++){
+                    if(k > i && k > j)
+                        if((int)i/line == (int)k/line && i != k){
+                            if((int)j/column == (int)l/column && j != l){
+                                addEdge(table[i][j].position, table[k][l].position);
+                            }
+                        }
+                }
             }
         }
     }
