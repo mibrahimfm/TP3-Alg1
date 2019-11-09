@@ -1,9 +1,9 @@
 #include "Sudoku.hpp"
 
 Sudoku::Sudoku(int square, int line, int column, int** table){
-    Position** sudokuTable = new Position*[square];
+    this->sudokuTable = new Position*[square];
     for(int i = 0; i < square; i++){
-        sudokuTable[i] = new Position[square];
+        this->sudokuTable[i] = new Position[square];
     }
 
     int pos = 0;
@@ -11,36 +11,35 @@ Sudoku::Sudoku(int square, int line, int column, int** table){
         for(int j = 0; j < square; j++){
             sudokuTable[i][j].position = pos;
             sudokuTable[i][j].value = table[i][j];
+            sudokuTable[i][j].colored = sudokuTable[i][j].value != 0 ? true : false;
             pos++;
         }
     }
 
-    BuildGraph(square, line, column, sudokuTable);
+    BuildGraph(square, line, column);
 }
 
-void Sudoku::BuildGraph(int square, int line, int column, Position** table){
+void Sudoku::BuildGraph(int square, int line, int column){
     this->V = square * square;
-    this->adjList = vector<vector<int>>(V);
+    this->square = square;
+    this->adjList = vector<vector<Position*>>(V);
 
     for(int i = 0; i < square; i++){
         for(int j = 0; j < square; j++){            
             int k = (i < j) ? i+1 : j+1;
-            int aux = k;
             for(; k < square; k++){
                 if(k > i){
-                    if(!existsEdge(table[i][j].position, table[k][j].position))
-                        addEdge(table[i][j].position, table[k][j].position);
+                    if(!existsEdge(this->sudokuTable[i][j], this->sudokuTable[k][j]))
+                        addEdge(&this->sudokuTable[i][j], &this->sudokuTable[k][j]);
                 }
                 if(k > j)
-                    if(!existsEdge(table[i][j].position, table[i][k].position))
-                        addEdge(table[i][j].position, table[i][k].position);
-                int maxLC = (line > column) ? line : column;
-                //if(aux == k)
+                    if(!existsEdge(this->sudokuTable[i][j], this->sudokuTable[i][k]))
+                        addEdge(&this->sudokuTable[i][j], &this->sudokuTable[i][k]);
                 for(int l = 0; l < square; l++){
                     if((int)i/line == (int)k/line && i != k){
                         if((int)j/column == (int)l/column && j != l){
-                            if(!existsEdge(table[i][j].position, table[k][l].position))
-                                addEdge(table[i][j].position, table[k][l].position);
+                            if(!existsEdge(this->sudokuTable[i][j], this->sudokuTable[k][l]))
+                                addEdge(&this->sudokuTable[i][j], &this->sudokuTable[k][l]);
                         }
                     }
                 }
@@ -49,17 +48,16 @@ void Sudoku::BuildGraph(int square, int line, int column, Position** table){
     }
 }
 
-void Sudoku::addEdge(int v1, int v2){
-    this->adjList[v1].push_back(v2);
-    this->adjList[v2].push_back(v1);
+void Sudoku::addEdge(Position* p1, Position* p2){
+    this->adjList[p1->position].push_back(p2);
+    this->adjList[p2->position].push_back(p1);
 }
 
-bool Sudoku::existsEdge(int v1, int v2){
-    for(auto p : this->adjList[v1]){
-        if(p == v2)
+bool Sudoku::existsEdge(Position p1, Position p2){
+    for(auto p : this->adjList[p1.position]){
+        if(p->position == p2.position)
             return true;
     }
-
     return false;
 }
 
@@ -68,7 +66,66 @@ void Sudoku::PrintGraph() {
         std::cout << "\n Adjacency list of vertex "
              << v << "\n head "; 
         for (auto x : this->adjList[v]) 
-           std::cout << "-> " << x; 
+           std::cout << "-> " << x->position; 
         printf("\n"); 
     } 
+}
+
+void Sudoku::FindSolution(){
+    int ammoColored, maxColored = 0, indexMax = 0;
+
+    bool available[this->square+1];
+    for(int i = 0;i <= square; i++){
+        available[i] = true;
+    }
+
+    for(int it = 0; it < this->V; it++){
+        maxColored = 0; indexMax = 0;
+        for(int v = 0; v < this->V; v++){
+            int auxLine = v / this->square;
+            int auxColumn = v % this->square;
+            ammoColored = 0;
+            if(!this->sudokuTable[auxLine][auxColumn].colored){
+                for(auto p : this->adjList[v]){
+                    if(p->colored){
+                        ammoColored++;
+                    }
+                }
+                if(ammoColored > maxColored){
+                    maxColored = ammoColored;
+                    indexMax = v;
+                }
+            }
+
+        }
+
+        for(auto p : this->adjList[indexMax]){
+            if(p->colored){            
+                available[p->value] = false;
+            }
+        }
+
+        for(int i = square; i > 0; i--){
+            if(available[i]){
+                int line = indexMax / this->square;
+                int column = indexMax % this->square;
+                this->sudokuTable[line][column].value = i;
+                this->sudokuTable[line][column].colored = true;
+                break;
+            }
+        }
+
+        for(int i = 0;i <= square; i++){
+            available[i] = true;
+        }
+    }
+}
+
+void Sudoku::PrintSolution(){
+    for(int i = 0; i < square; i++){
+        for(int j = 0; j < square; j++){
+            std::cout << this->sudokuTable[i][j].value << " ";
+        }
+        std::cout << std::endl;
+    }
 }

@@ -37,7 +37,8 @@ int main(int argc, char** argv){
             }
 
             Sudoku s(square, line, column, matrix);
-            s.PrintGraph();
+            s.FindSolution();
+            s.PrintSolution();
         }
         else{
             cout << "Couldn't open file " << fileName << 
