@@ -24,6 +24,7 @@ public:
     void BuildGraph(int, int, int);
     void PrintGraph();
     void FindSolution();
+    int NextNodeToColor();
     void PrintSolution();
 };
 

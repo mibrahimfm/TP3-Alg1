@@ -72,7 +72,7 @@ void Sudoku::PrintGraph() {
 }
 
 void Sudoku::FindSolution(){
-    int ammoColored, maxColored = 0, indexMax = 0;
+    
 
     bool available[this->square+1];
     for(int i = 0;i <= square; i++){
@@ -80,24 +80,8 @@ void Sudoku::FindSolution(){
     }
 
     for(int it = 0; it < this->V; it++){
-        maxColored = 0; indexMax = 0;
-        for(int v = 0; v < this->V; v++){
-            int auxLine = v / this->square;
-            int auxColumn = v % this->square;
-            ammoColored = 0;
-            if(!this->sudokuTable[auxLine][auxColumn].colored){
-                for(auto p : this->adjList[v]){
-                    if(p->colored){
-                        ammoColored++;
-                    }
-                }
-                if(ammoColored > maxColored){
-                    maxColored = ammoColored;
-                    indexMax = v;
-                }
-            }
-
-        }
+        int indexMax = this->NextNodeToColor();
+        
 
         for(auto p : this->adjList[indexMax]){
             if(p->colored){            
@@ -119,6 +103,30 @@ void Sudoku::FindSolution(){
             available[i] = true;
         }
     }
+}
+
+int Sudoku::NextNodeToColor(){
+    int ammoColored, maxColored = 0, indexMax = 0;
+
+    for(int v = 0; v < this->V; v++){
+        int auxLine = v / this->square;
+        int auxColumn = v % this->square;
+        ammoColored = 0;
+        if(!this->sudokuTable[auxLine][auxColumn].colored){
+            for(auto p : this->adjList[v]){
+                if(p->colored){
+                    ammoColored++;
+                }
+            }
+            if(ammoColored > maxColored){
+                maxColored = ammoColored;
+                indexMax = v;
+            }
+        }
+
+    }
+
+    return indexMax;
 }
 
 void Sudoku::PrintSolution(){
