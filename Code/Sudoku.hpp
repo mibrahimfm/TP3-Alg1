@@ -3,8 +3,10 @@
 
 #include <iostream>
 #include <vector>
+#include <set>
 
 using std::vector;
+using std::set;
 
 struct Position{
     int position;
@@ -14,7 +16,7 @@ struct Position{
 
 class Sudoku{
 private:
-    int V, square;
+    int V, square, line, column;
     Position** sudokuTable;
     void addEdge(Position*, Position*);
     bool existsEdge(Position, Position);
@@ -24,8 +26,9 @@ public:
     void BuildGraph(int, int, int);
     void PrintGraph();
     void FindSolution();
-    int NextNodeToColor();
+    int NextNodeToColor(bool*);
     void PrintSolution();
+    void AssignValue(bool*, int);
 };
 
 #endif

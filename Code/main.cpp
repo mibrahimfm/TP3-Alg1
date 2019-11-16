@@ -23,7 +23,7 @@ int main(int argc, char** argv){
 
 
         if(input.is_open()){
-            input >> square  >> line >> column;
+            input >> square  >> column >> line;
 
             matrix = new int*[square];
             for(int i = 0; i < square; i++){
@@ -37,6 +37,7 @@ int main(int argc, char** argv){
             }
 
             Sudoku s(square, line, column, matrix);
+            //s.PrintGraph();
             s.FindSolution();
             s.PrintSolution();
         }
