@@ -16,7 +16,7 @@ struct Position{
 
 class Sudoku{
 private:
-    int V, square, line, column;
+    int V, square, ammoLine, ammoCol;
     Position** sudokuTable;
     void addEdge(Position*, Position*);
     bool existsEdge(Position, Position);
@@ -29,6 +29,7 @@ public:
     int NextNodeToColor(bool*);
     void PrintSolution();
     void AssignValue(bool*, int);
+    void checkSolved();
 };
 
 #endif

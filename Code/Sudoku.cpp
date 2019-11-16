@@ -1,7 +1,6 @@
 #include "Sudoku.hpp"
 
 Sudoku::Sudoku(int square, int line, int column, int** table){
-    this->line = line; this->column = column;
 
     this->sudokuTable = new Position*[square];
     for(int i = 0; i < square; i++){
@@ -132,11 +131,13 @@ int Sudoku::NextNodeToColor(bool* available){
 
     }
 
-    std::cout << indexMax << std::endl;
     return indexMax;
 }
 
 void Sudoku::PrintSolution(){
+
+    checkSolved();
+
     for(int i = 0; i < square; i++){
         for(int j = 0; j < square; j++){
             std::cout << this->sudokuTable[i][j].value << " ";
@@ -156,3 +157,15 @@ void Sudoku::AssignValue(bool* available, int indexMax){
         }
 }
 
+void Sudoku::checkSolved(){
+    for(int i = 0; i < square; i++){
+        for(int j = 0; j < square; j++){
+            if(this->sudokuTable[i][j].value == 0){
+                std::cout << "Sem solucao" << std::endl;
+                return;
+            }
+        }
+    }
+
+    std::cout << "solucao" << std::endl;
+}
