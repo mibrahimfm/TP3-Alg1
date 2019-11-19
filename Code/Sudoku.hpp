@@ -15,21 +15,23 @@ struct Position{
 };
 
 class Sudoku{
-private:
-    int V, square, ammoLine, ammoCol;
-    Position** sudokuTable;
-    void addEdge(Position*, Position*);
-    bool existsEdge(Position, Position);
-    vector<vector<Position*>> adjList;
-public:
-    Sudoku(int, int, int, int**);
-    void BuildGraph(int, int, int);
-    void PrintGraph();
-    void FindSolution();
-    int NextNodeToColor(bool*);
-    void PrintSolution();
-    void AssignValue(bool*, int);
-    void checkSolved();
+
+    private:
+        int V, square, ammoLine, ammoCol;
+        Position** sudokuTable;
+        vector<vector<Position*>> adjList;
+        void buildGraph(int, int, int);
+        void addEdge(Position*, Position*);
+        bool existsEdge(Position, Position);
+        int nextNodeToColor(bool*);
+        void assignValue(bool*, int);
+        void checkSolved();
+    public:
+        Sudoku(int, int, int, int**);
+        void PrintGraph();
+        void FindSolution();    
+        void PrintSolution();
+    
 };
 
 #endif
