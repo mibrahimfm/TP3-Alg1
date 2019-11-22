@@ -94,26 +94,26 @@ void Sudoku::FindSolution(){
 }
 
 int Sudoku::nextNodeToColor(bool* available){
-    int ammoColored, maxColored = 0, indexMax = 0;
+    int ammountColored, maxColored = 0, indexMax = 0;
 
     for(int v = 0; v < this->V; v++){
         int auxLine = v / this->square;
         int auxColumn = v % this->square;
-        ammoColored = 0;
+        ammountColored = 0;
 
         if(!this->sudokuTable[auxLine][auxColumn].colored){
 
             for(auto p : this->adjList[v]){
                 if(p->colored){
                     if(available[p->value]){
-                        ammoColored++;
+                        ammountColored++;
                         available[p->value] = false;
                     }
                 }
             }
 
-            if(ammoColored > maxColored){
-                maxColored = ammoColored;
+            if(ammountColored > maxColored){
+                maxColored = ammountColored;
                 indexMax = v;
             }
 
